@@ -1,4 +1,4 @@
-import { data } from '../db';
+import data from '../../db.js';
 
 const resolvers = {
   Author: {
@@ -15,13 +15,13 @@ const resolvers = {
 
   Query: {
     async author(root, { id }, context, info) {
-      return data.authors.find(author => author.id === id);
+      return data.authors.find(author => author.id === Number(id));
     },
     async authors(root, args, context, info) {
       return data.authors;
     },
     async book(root, { id }, context, info) {
-      return data.books.find(book => book.id === id);
+      return data.books.find(book => book.id === Number(id));
     },
     async books(root, args, context, info) {
       return data.books;
