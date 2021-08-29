@@ -3,3 +3,6 @@ node_modules
 
 # mock test data
 server/db.js
+
+# db
+server/src/dataSources/tables.sql

@@ -3,7 +3,7 @@ import data from '../../db.js';
 const resolvers = {
   Author: {
     async books(author, args, context, info) {
-      // return bopoks for an author
+      // return books for an author
     },
   },
 
@@ -14,17 +14,17 @@ const resolvers = {
   },
 
   Query: {
-    async author(root, { id }, context, info) {
-      return data.authors.find(author => author.id === Number(id));
+    async author(root, { id }, { dataSources }, info) {
+      return dataSources.db.getAuthorById(id);
     },
-    async authors(root, args, context, info) {
-      return data.authors;
+    async authors(root, args, { dataSources }, info) {
+      return dataSources.db.getAuthors();
     },
-    async book(root, { id }, context, info) {
-      return data.books.find(book => book.id === Number(id));
+    async book(root, { id }, { dataSources }, info) {
+      return dataSources.db.getBookById(id);
     },
-    async books(root, args, context, info) {
-      return data.books;
+    async books(root, args, { dataSources }, info) {
+      return dataSources.db.getBooks();
     },
   }
 };
