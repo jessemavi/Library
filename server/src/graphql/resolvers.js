@@ -1,29 +1,29 @@
-import data from '../../db.js';
-
 const resolvers = {
   Author: {
-    async books(author, args, context, info) {
+    books(author, args, { dataSources}, info) {
       // return books for an author
+      return dataSources.db.getAuthorBooks(author.id);
     },
   },
 
   Book: {
-    async authors(book, args, context, info) {
+    authors(book, args, { dataSources }, info) {
       // return authors for a book
+      return dataSources.db.getBookAuthors(book.id);
     }
   },
 
   Query: {
-    async author(root, { id }, { dataSources }, info) {
+    author(root, { id }, { dataSources }, info) {
       return dataSources.db.getAuthorById(id);
     },
-    async authors(root, args, { dataSources }, info) {
+    authors(root, args, { dataSources }, info) {
       return dataSources.db.getAuthors();
     },
-    async book(root, { id }, { dataSources }, info) {
+    book(root, { id }, { dataSources }, info) {
       return dataSources.db.getBookById(id);
     },
-    async books(root, args, { dataSources }, info) {
+    books(root, args, { dataSources }, info) {
       return dataSources.db.getBooks();
     },
   }
