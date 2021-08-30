@@ -47,6 +47,18 @@ class Database extends SQLDataSource {
   getBooks() {
     return this.knex.select('*').from('books').cache(MINUTE);
   }
+
+  getBookReviews(bookId) {
+    return this.knex
+      .select('*').from('reviews')
+      .where({ book_id: bookId }).cache(MINUTE);
+  }
+
+  getReviewById(id) {
+    return this.knex.select('*').from('reviews').where({ id }).cache(MINUTE)
+      .then(rows => rows[0])
+      .catch(err => console.error(err));
+  }
 }
 
 export default Database;

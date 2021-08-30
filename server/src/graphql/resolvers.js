@@ -10,6 +10,18 @@ const resolvers = {
     authors(book, args, { dataSources }, info) {
       // return authors for a book
       return dataSources.db.getBookAuthors(book.id);
+    },
+    reviews(book, args, { dataSources }, info) {
+      return dataSources.db.getBookReviews(book.id);
+    }
+  },
+
+  Review: {
+    book(review, args, { dataSources }, info) {
+      return dataSources.db.getBookById(review.book_id);
+    },
+    reviewedOn(review, args, { dataSources }, info) {
+      return review.created_at;
     }
   },
 
@@ -26,6 +38,9 @@ const resolvers = {
     books(root, args, { dataSources }, info) {
       return dataSources.db.getBooks();
     },
+    review(root, { id }, { dataSources }, info) {
+      return dataSources.db.getReviewById(id);
+    }
   }
 };
 
