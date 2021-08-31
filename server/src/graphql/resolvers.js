@@ -56,6 +56,12 @@ const resolvers = {
     user(root, { username }, { dataSources }, info) {
       return dataSources.db.getUser(username);l
     }
+  },
+
+  Mutation: {
+    createAuthor(root, { name }, { dataSources }, info) {
+      return dataSources.db.createAuthor(name);
+    }
   }
 };
 

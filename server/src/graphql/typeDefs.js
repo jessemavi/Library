@@ -42,6 +42,10 @@ const typeDefs = gql`
     review(id: ID!): Review
     user(username: String!): User
   }
+
+  type Mutation {
+    createAuthor(name: String!): Author!
+  }
 `;
 
 export default typeDefs;

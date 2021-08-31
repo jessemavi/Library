@@ -84,6 +84,13 @@ class Database extends SQLDataSource {
   getUserReviews(userId) {
     return this.knex.select('*').from('reviews').where({ user_id: userId }).cache(MINUTE);
   }
+
+  async createAuthor(name) {
+    return this.knex
+      .insert({ name }, ['*']).into('authors')
+      .then(rows => rows[0])
+      .catch(err => console.error(err));
+  }
 } 
 
 export default Database;
