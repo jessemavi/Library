@@ -54,11 +54,36 @@ class Database extends SQLDataSource {
       .where({ book_id: bookId }).cache(MINUTE);
   }
 
-  getReviewById(id) {
+  async getReviewById(id) {
     return this.knex.select('*').from('reviews').where({ id }).cache(MINUTE)
       .then(rows => rows[0])
       .catch(err => console.error(err));
   }
-}
+
+  async getUser(username) {
+    return this.knex.select('*').from('users').where({ username }).cache(MINUTE)
+      .then(rows => rows[0])
+      .catch(err => console.error(err));
+  } 
+
+  async getUserById(id) {
+    return this.knex.select('*').from('users').where({ id }).cache(MINUTE)
+      .then(rows => rows[0])
+      .catch(err => console.error(err));
+  }
+
+  async getUserLibrary(userId) {
+    return this.knex
+      .select('*').from('users_books')
+      .join('books', 'users_books.book_id', '=', 'books.id')
+      .where({ user_id: userId }).cache(MINUTE)
+      .then(rows => rows)
+      .catch(err => console.error(err));
+  }
+
+  getUserReviews(userId) {
+    return this.knex.select('*').from('reviews').where({ user_id: userId }).cache(MINUTE);
+  }
+} 
 
 export default Database;

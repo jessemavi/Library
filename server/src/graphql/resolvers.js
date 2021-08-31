@@ -22,6 +22,18 @@ const resolvers = {
     },
     reviewedOn(review, args, { dataSources }, info) {
       return review.created_at;
+    },
+    reviewer(review, args, { dataSources }, info) {
+      return dataSources.db.getUserById(review.user_id);
+    }
+  },
+
+  User: {
+    library(user, args, { dataSources }, info) {
+      return dataSources.db.getUserLibrary(user.id);
+    },
+    reviews(user, args, { dataSources }, info) {
+      return dataSources.db.getUserReviews(user.id);
     }
   },
 
@@ -40,6 +52,9 @@ const resolvers = {
     },
     review(root, { id }, { dataSources }, info) {
       return dataSources.db.getReviewById(id);
+    },
+    user(root, { username }, { dataSources }, info) {
+      return dataSources.db.getUser(username);l
     }
   }
 };
