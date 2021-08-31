@@ -1,6 +1,13 @@
 import { gql } from "apollo-server";
 
 const typeDefs = gql`
+  input CreateBookInput {
+    authorIds: [ID]
+    cover: String
+    summary: String
+    title: String!
+  }
+
   type Author {
     id: ID!
     books: [Book]
@@ -45,6 +52,7 @@ const typeDefs = gql`
 
   type Mutation {
     createAuthor(name: String!): Author!
+    createBook(input: CreateBookInput!): Book!
   }
 `;
 

@@ -91,6 +91,29 @@ class Database extends SQLDataSource {
       .then(rows => rows[0])
       .catch(err => console.error(err));
   }
+
+  async createBook({ authorIds, cover, summary, title }) {
+    // create book
+    const book = await this.knex
+      .insert({ ...(cover && { cover }), ...(summary && { summary }), title}, ['*'])
+      .into('books')
+      .then(rows => rows[0])
+      .catch(err => console.error(err));
+    
+    console.log('book: ', book);
+
+    if(authorIds?.length) {
+      const bookAuthors = authorIds.map(id => {
+        return { author_id: id, book_id: book.id };
+      });
+      console.log('bookAuthors: ', bookAuthors)
+      await this.knex
+        .insert(bookAuthors).into('authors_books')
+        .catch(err => console.error(err));
+    }
+
+    return book;
+  }
 } 
 
 export default Database;
