@@ -1,3 +1,4 @@
+import { ForbiddenError } from "apollo-server-errors";
 import { SQLDataSource } from "datasource-sql";
 
 // number of seconds to retain the data in the cache
@@ -99,20 +100,40 @@ class Database extends SQLDataSource {
       .into('books')
       .then(rows => rows[0])
       .catch(err => console.error(err));
-    
-    console.log('book: ', book);
 
+    // add authorIds and bookIds to authors_books join table
     if(authorIds?.length) {
       const bookAuthors = authorIds.map(id => {
         return { author_id: id, book_id: book.id };
       });
-      console.log('bookAuthors: ', bookAuthors)
       await this.knex
         .insert(bookAuthors).into('authors_books')
         .catch(err => console.error(err));
     }
 
     return book;
+  }
+
+  async createReview({ bookId, rating, reviewerId, text }) {
+    const existingReview = await this.knex
+      .select('*').from('reviews')
+      .where({ book_id: bookId, user_id: reviewerId })
+      .then(rows => rows[0]);
+    
+    if(existingReview) {
+      throw new ForbiddenError('Users can only submit one review per book')
+    }
+
+    return this.knex
+      .insert({
+        book_id: bookId,
+        rating,
+        user_id: reviewerId,
+        ...(text && { text })
+      }, ['*'])
+      .into('reviews')
+      .then(rows => rows[0])
+      .catch(err => console.error(err));
   }
 } 
 

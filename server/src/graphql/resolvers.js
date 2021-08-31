@@ -64,6 +64,9 @@ const resolvers = {
     },
     createBook(root, { input }, { dataSources }, info) {
       return dataSources.db.createBook(input);
+    },
+    createReview(root, { input }, { dataSources }, info) {
+      return dataSources.db.createReview(input);
     }
   }
 };
