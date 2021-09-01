@@ -76,6 +76,12 @@ const resolvers = {
     },
     signUp(root, { input }, { dataSources }, info) {
       return dataSources.db.signUp(input);
+    },
+    addBooksToLibrary(root, { input }, { dataSources }, info) {
+      return dataSources.db.addBooksToLibrary(input);
+    },
+    removeBooksFromLibrary(root, { input }, { dataSources }, info) {
+      return dataSources.db.removeBooksFromLibrary(input);
     }
   }
 };

@@ -173,6 +173,56 @@ class Database extends SQLDataSource {
       .then(rows => rows[0])
       .catch(err => console.error(err));
   }
+
+  async addBooksToLibrary({ bookIds, userId }) {
+    // check if books already exist in a users' library
+    const existingLibraryBooks = await this.knex
+      .select('*').from('users_books')
+      .orWhereIn('book_id', bookIds)
+      .andWhere({ user_id: userId });
+
+    // get new book ids to add
+    const newBookIds = bookIds.filter(bookId => (
+      !existingLibraryBooks.find(book => book.book_id === parseInt(bookId))
+    ));
+
+    // console.log('newBookIds: ', newBookIds);
+
+    const newBooksToAdd = newBookIds.map(bookId => (
+      { book_id: bookId, user_id: userId }
+    ));
+
+    await this.knex
+      .insert(newBooksToAdd).into('users_books')
+      .catch(err => console.error(err));
+
+    return this.knex
+      .select('*').from('users').where({ id: userId })
+      .then(rows => rows[0])
+      .catch(err => console.error(err));
+  }
+
+  async removeBooksFromLibrary({ bookIds, userId }) {
+    // get list of books to be deleted that exist in library
+    const existingLibraryBooks = await this.knex
+      .select('*').from('users_books')
+      .orWhereIn('book_id', bookIds)
+      .where({ user_id: userId })
+      .catch(err => console.error(err));
+    
+    const existingLibraryBookIds = existingLibraryBooks.map(book => book.book_id);
+
+    await this.knex
+      .delete().from('users_books')
+      .orWhereIn('book_id', existingLibraryBookIds)
+      .where({ user_id: userId })
+      .catch(err => console.error(err));
+
+    return this.knex
+      .select('*').from('users').where({ id: userId })
+      .then(rows => rows[0])
+      .catch(err => console.error(err));
+  }
 } 
 
 export default Database;
