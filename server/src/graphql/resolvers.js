@@ -73,6 +73,9 @@ const resolvers = {
     },
     updateReview(root, { input }, { dataSources }, info) {
       return dataSources.db.updateReview(input);
+    },
+    signUp(root, { input }, { dataSources }, info) {
+      return dataSources.db.signUp(input);
     }
   }
 };

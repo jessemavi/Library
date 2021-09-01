@@ -1,10 +1,26 @@
-import { ForbiddenError } from "apollo-server-errors";
+import { ForbiddenError, UserInputError } from "apollo-server-errors";
 import { SQLDataSource } from "datasource-sql";
 
 // number of seconds to retain the data in the cache
 const MINUTE = 60;
 
 class Database extends SQLDataSource {
+  // utility to check for existing user names
+  async checkUniqueUserData(email, username) {
+    const res = await Promise.all([
+      this.knex.select('email').from('users').where({ email }),
+      this.knex.select('username').from('users').where({ username })
+    ]);
+
+    const [existingEmail, existingUsername] = res;
+
+    if (existingEmail.length) {
+      throw new UserInputError('Email is already in use');
+    } else if (existingUsername.length) {
+      throw new UserInputError('Username is already in use');
+    }
+  }
+
   async getAuthorById(id) {
     return this.knex
       .select('*').from('authors').where({ id }).cache(MINUTE)
@@ -148,6 +164,14 @@ class Database extends SQLDataSource {
     .from('reviews').where({ id })
     .then(rows => rows[0])
     .catch(err => console.error(err));
+  }
+
+  async signUp({ email, name, username }) {
+    await this.checkUniqueUserData(email, username);
+    return this.knex
+      .insert({ email, name, username }, ['*']).into('users')
+      .then(rows => rows[0])
+      .catch(err => console.error(err));
   }
 } 
 

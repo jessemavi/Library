@@ -21,6 +21,12 @@ const typeDefs = gql`
     text: String
   }
 
+  input SignUpUser {
+    email: String!
+    name: String!
+    username: String!
+  }
+
   type Author {
     id: ID!
     books: [Book]
@@ -69,6 +75,7 @@ const typeDefs = gql`
     createReview(input: CreateReviewInput!): Review!
     deleteReview(id: ID!): ID!
     updateReview(input: UpdateReviewInput!): Review
+    signUp(input: SignUpUser!): User!
   }
 `;
 
