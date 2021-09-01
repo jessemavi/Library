@@ -67,6 +67,12 @@ const resolvers = {
     },
     createReview(root, { input }, { dataSources }, info) {
       return dataSources.db.createReview(input);
+    },
+    deleteReview(root, { id }, { dataSources }, info) {
+      return dataSources.db.deleteReview(id);
+    },
+    updateReview(root, { input }, { dataSources }, info) {
+      return dataSources.db.updateReview(input);
     }
   }
 };

@@ -124,16 +124,30 @@ class Database extends SQLDataSource {
       throw new ForbiddenError('Users can only submit one review per book')
     }
 
+    const review = {
+      book_id: bookId,
+      rating,
+      user_id: reviewerId,
+      ...(text && { text })
+    };
+
     return this.knex
-      .insert({
-        book_id: bookId,
-        rating,
-        user_id: reviewerId,
-        ...(text && { text })
-      }, ['*'])
-      .into('reviews')
+      .insert(review, ['*']).into('reviews')
       .then(rows => rows[0])
       .catch(err => console.error(err));
+  }
+
+  async deleteReview(id) {
+    await this.knex.delete().from('reviews').where({ id });
+    return id;
+  }
+
+  async updateReview({ id, rating, text }) {
+    return this.knex
+    .update({ rating, ...(text && { text })}, ['*'])
+    .from('reviews').where({ id })
+    .then(rows => rows[0])
+    .catch(err => console.error(err));
   }
 } 
 
