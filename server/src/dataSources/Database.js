@@ -109,10 +109,15 @@ class Database extends SQLDataSource {
       .catch(err => console.error(err));
   }
 
-  async createBook({ authorIds, cover, summary, title }) {
+  async createBook({ authorIds, cover, genre, summary, title }) {
     // create book
     const book = await this.knex
-      .insert({ ...(cover && { cover }), ...(summary && { summary }), title}, ['*'])
+      .insert({ 
+        ...(cover && { cover }),
+        ...(genre && { genre }),
+        ...(summary && { summary }),
+        title
+      }, ['*'])
       .into('books')
       .then(rows => rows[0])
       .catch(err => console.error(err));
