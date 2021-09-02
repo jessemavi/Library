@@ -77,6 +77,9 @@ const resolvers = {
     signUp(root, { input }, { dataSources }, info) {
       return dataSources.db.signUp(input);
     },
+    login(root, args, { dataSources }, info) {
+      return dataSources.db.login(args);
+    },
     addBooksToLibrary(root, { input }, { dataSources }, info) {
       return dataSources.db.addBooksToLibrary(input);
     },

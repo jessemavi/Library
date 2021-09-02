@@ -1,4 +1,4 @@
-import { ForbiddenError, UserInputError } from "apollo-server-errors";
+import { AuthenticationError, ForbiddenError, UserInputError } from "apollo-server-errors";
 import { SQLDataSource } from "datasource-sql";
 import jwt from "jsonwebtoken";
 import validator from "validator";
@@ -190,13 +190,40 @@ class Database extends SQLDataSource {
       .then(rows => rows[0])
       .catch(err => console.error(err));
     
-      const token = jwt.sign({ username }, process.env.JWT_SECRET, {
-        algorithm: 'HS256',
-        subject: user.id.toString(),
-        expiresIn: '1d'
-      });
+    const token = jwt.sign({ username }, process.env.JWT_SECRET, {
+      algorithm: 'HS256',
+      subject: user.id.toString(),
+      expiresIn: '1d'
+    });
 
-      return { token, viewer: user };
+    return { token, viewer: user };
+  }
+
+  async login({ password, username }) {
+    const user = await this.knex
+      .select('*').from('users')
+      .where({ username })
+      .then(rows => rows[0])
+      .catch(err => console.error(err));
+    
+    console.log('user: ', user);
+
+    if (!user) {
+      throw new AuthenticationError('User with that username does not exist');
+    }
+
+    const isValidPassword = await verifyPassword(password, user.password);
+    if (!isValidPassword) {
+      throw new AuthenticationError('Username or password is incorrect');
+    }
+
+    const token = jwt.sign({ username }, process.env.JWT_SECRET, {
+      algorithm: 'HS256',
+      subject: user.id.toString(),
+      expiresIn: '1d'
+    });
+
+    return { token, viewer: user };
   }
 
   async addBooksToLibrary({ bookIds, userId }) {
