@@ -1,5 +1,9 @@
 import { ForbiddenError, UserInputError } from "apollo-server-errors";
 import { SQLDataSource } from "datasource-sql";
+import jwt from "jsonwebtoken";
+import validator from "validator";
+
+import { hashPassword, verifyPassword } from "../utils/passwords.js";
 
 // number of seconds to retain the data in the cache
 const MINUTE = 60;
@@ -171,12 +175,28 @@ class Database extends SQLDataSource {
     .catch(err => console.error(err));
   }
 
-  async signUp({ email, name, username }) {
+  async signUp({ email, name, password, username }) {
     await this.checkUniqueUserData(email, username);
-    return this.knex
-      .insert({ email, name, username }, ['*']).into('users')
+
+    if (!validator.isStrongPassword(password)) {
+      throw new UserInputError('Password must be a minimum of 8 characters in length and contain 1 lowercase letter, 1 uppercase letter, 1 number, and 1 special character.');
+    }
+
+    const hashedPassword = await hashPassword(password);
+
+    const user = await this.knex
+      .insert({ email, name, password: hashedPassword, username }, ['*'])
+      .into('users')
       .then(rows => rows[0])
       .catch(err => console.error(err));
+    
+      const token = jwt.sign({ username }, process.env.JWT_SECRET, {
+        algorithm: 'HS256',
+        subject: user.id.toString(),
+        expiresIn: '1d'
+      });
+
+      return { token, viewer: user };
   }
 
   async addBooksToLibrary({ bookIds, userId }) {

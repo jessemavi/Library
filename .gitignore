@@ -1,6 +1,9 @@
 # dependencies
 node_modules
 
+# environment
+.env
+
 # mock test data
 server/db.js
 

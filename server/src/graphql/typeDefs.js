@@ -45,10 +45,20 @@ const typeDefs = gql`
     userId: ID!
   }
 
-  input SignUpUser {
+  input SignUpInput {
     email: String!
     name: String!
+    """
+    user's password, must be minimum of 8 characters with 1 lowercase letter, 1 uppercase letter, 1 number, and 1 special character
+    """
+    password: String!
     username: String!
+  }
+
+  # authenticated user and their valid JWT
+  type AuthPayload {
+    viewer: User
+    token: String
   }
 
   # Author who has written book(s)
@@ -126,7 +136,7 @@ const typeDefs = gql`
     createReview(input: CreateReviewInput!): Review!
     deleteReview(id: ID!): ID!
     updateReview(input: UpdateReviewInput!): Review!
-    signUp(input: SignUpUser!): User!
+    signUp(input: SignUpInput!): AuthPayload!
     addBooksToLibrary(input: UpdateLibraryBooksInput!): User!
     removeBooksFromLibrary(input: UpdateLibraryBooksInput!): User!
   }
