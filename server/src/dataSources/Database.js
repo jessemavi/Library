@@ -205,8 +205,6 @@ class Database extends SQLDataSource {
       .where({ username })
       .then(rows => rows[0])
       .catch(err => console.error(err));
-    
-    console.log('user: ', user);
 
     if (!user) {
       throw new AuthenticationError('User with that username does not exist');
@@ -237,8 +235,6 @@ class Database extends SQLDataSource {
     const newBookIds = bookIds.filter(bookId => (
       !existingLibraryBooks.find(book => book.book_id === parseInt(bookId))
     ));
-
-    // console.log('newBookIds: ', newBookIds);
 
     const newBooksToAdd = newBookIds.map(bookId => (
       { book_id: bookId, user_id: userId }

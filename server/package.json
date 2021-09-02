@@ -11,9 +11,11 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "apollo-server": "^3.3.0",
+    "apollo-server-express": "^3.3.0",
+    "cors": "^2.8.5",
     "datasource-sql": "^1.5.0",
     "dotenv": "^10.0.0",
+    "express": "^4.17.1",
     "graphql": "^15.5.1",
     "jsonwebtoken": "^8.5.1",
     "knex": "^0.95.10",
