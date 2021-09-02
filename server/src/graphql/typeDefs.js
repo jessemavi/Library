@@ -1,6 +1,7 @@
 import { gql } from "apollo-server";
 
 const typeDefs = gql`
+  # Genres for a book
   enum Genre {
     ADVENTURE
     CHILDREN
@@ -17,7 +18,7 @@ const typeDefs = gql`
     THRILLER
     WESTERN
   }
-
+  
   input CreateBookInput {
     authorIds: [ID]
     cover: String
@@ -50,37 +51,63 @@ const typeDefs = gql`
     username: String!
   }
 
+  # Author who has written book(s)
   type Author {
+    # unique ID
     id: ID!
+    # books that were authored by this author
     books: [Book]
+    # full name
     name: String!
   }
 
+  # book which can be written by 1 or more authors and reviewed by users
   type Book {
+    # unique ID of the book
     id: ID!
+    # author(s) who wrote the book
     authors: [Author]
+    # URL of the book's cover image
     cover: String
+    # genre which the book can be assigned to
     genre: Genre
+    # user submitted reviews
     reviews: [Review]
+    # description of the book
     summary: String
+    # title of the book
     title: String!
   }
 
+  # review submitted by a user that includes a rating and possibly text
   type Review {
+    # unique ID of the review
     id: ID!
+    # the book the review is about
     book: Book
+    # user's number rating of the book(1 to 5)
     rating: Int!
+    # date and time review was created
     reviewedOn: String!
+    # user who submitted the review
     reviewer: User!
+    # text content of the review
     text: String
   }
 
+  # user account info
   type User {
+    # uniqie ID fo the user
     id: ID!
+    # user's unique email address
     email: String!
+    # list of books the user has added to their library
     library: [Book]
+    # full name of the user
     name: String!
+    # list of book reviews created by the user
     reviews: [Review]
+    # user's unique username
     username: String!
   }
 
@@ -98,7 +125,7 @@ const typeDefs = gql`
     createBook(input: CreateBookInput!): Book!
     createReview(input: CreateReviewInput!): Review!
     deleteReview(id: ID!): ID!
-    updateReview(input: UpdateReviewInput!): Review
+    updateReview(input: UpdateReviewInput!): Review!
     signUp(input: SignUpUser!): User!
     addBooksToLibrary(input: UpdateLibraryBooksInput!): User!
     removeBooksFromLibrary(input: UpdateLibraryBooksInput!): User!
