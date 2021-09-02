@@ -55,6 +55,11 @@ const resolvers = {
     },
     user(root, { username }, { dataSources }, info) {
       return dataSources.db.getUser(username);l
+    },
+    viewer(root, args, { dataSources, user }, info) {
+      if (user?.username) {
+        return dataSources.db.getUser(user.username);
+      }
     }
   },
 

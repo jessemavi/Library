@@ -128,6 +128,8 @@ const typeDefs = gql`
     books: [Book]
     review(id: ID!): Review
     user(username: String!): User
+    # retrieves the currently authenticated user
+    viewer: User
   }
 
   type Mutation {

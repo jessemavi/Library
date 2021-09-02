@@ -200,6 +200,7 @@ class Database extends SQLDataSource {
   }
 
   async login({ password, username }) {
+    // refactor
     const user = await this.knex
       .select('*').from('users')
       .where({ username })
@@ -243,7 +244,8 @@ class Database extends SQLDataSource {
     await this.knex
       .insert(newBooksToAdd).into('users_books')
       .catch(err => console.error(err));
-
+    
+    // refactor
     return this.knex
       .select('*').from('users').where({ id: userId })
       .then(rows => rows[0])
@@ -266,6 +268,7 @@ class Database extends SQLDataSource {
       .where({ user_id: userId })
       .catch(err => console.error(err));
 
+    // refactor
     return this.knex
       .select('*').from('users').where({ id: userId })
       .then(rows => rows[0])
