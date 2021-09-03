@@ -1,4 +1,6 @@
 import { ApolloServer } from "apollo-server-express";
+import { makeExecutableSchema } from "@graphql-tools/schema";
+import { applyMiddleware } from "graphql-middleware";
 import cors from "cors";
 import express from "express";
 import expressJwt from "express-jwt";
@@ -6,6 +8,7 @@ import expressJwt from "express-jwt";
 import Database from "./dataSources/Database.js";
 import resolvers from "./graphql/resolvers.js";
 import typeDefs from "./graphql/typeDefs.js";
+import permissions from "./graphql/permissions.js";
 
 const port = process.env.GRAPHQL_API_PORT;
 const app = express();
@@ -44,9 +47,15 @@ const knexConfig = {
 
 const db = new Database(knexConfig);
 
-const server = new ApolloServer({
+const schema = makeExecutableSchema({
   typeDefs,
   resolvers,
+});
+
+const schemaWithPermissions = applyMiddleware(schema, permissions);
+
+const server = new ApolloServer({
+  schema: schemaWithPermissions,
   dataSources: () => ({ db }),
   context: ({req}) => {
     const user = req.user || null;
