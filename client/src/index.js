@@ -1,11 +1,15 @@
 import ReactDOM from 'react-dom';
+import { BrowserRouter as Router } from 'react-router-dom';
+
+import { Routes } from './router';
+
 import './index.css';
 
 function App() {
   return (
-    <div>
-      <p>Hello, world!</p>
-    </div>
+    <Router>
+      <Routes />
+    </Router>
   );
 }
 
