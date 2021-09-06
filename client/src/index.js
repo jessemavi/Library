@@ -1,15 +1,19 @@
 import ReactDOM from 'react-dom';
 import { BrowserRouter as Router } from 'react-router-dom';
+import { ApolloProvider } from '@apollo/client';
 
 import { Routes } from './router';
+import client from './graphql/apollo';
 
 import './index.css';
 
 function App() {
   return (
-    <Router>
-      <Routes />
-    </Router>
+    <ApolloProvider client={client}>
+      <Router>
+        <Routes />
+      </Router>
+    </ApolloProvider>
   );
 }
 
