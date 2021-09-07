@@ -1,17 +1,14 @@
 import { gql } from '@apollo/client';
 
+import { book } from './fragments';
+
 export const GetBooks = gql`
   query GetBooks {
     books {
-      id
-      title
-      cover
-      authors { 
-        id
-        name 
-      }
+      ...book
     }
   }
+  ${book}
 `;
 
 export const GetViewer = gql`
@@ -23,4 +20,16 @@ export const GetViewer = gql`
       username
     }
   }
+`;
+
+export const GetViewerLibrary = gql`
+  query GetViewerLibrary {
+    viewer { 
+      id
+      library {
+        ...book
+      }
+    } 
+  }
+  ${book}
 `;

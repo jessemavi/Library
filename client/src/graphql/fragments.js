@@ -11,3 +11,15 @@ export const viewerAndToken = gql`
     token 
   }
 `;
+
+export const book = gql`
+  fragment book on Book {
+    id
+    title
+    cover
+    authors { 
+      id
+      name
+    }
+  } 
+`; 
