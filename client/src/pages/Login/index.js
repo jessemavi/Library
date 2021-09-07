@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useMutation } from "@apollo/client";
-import { useHistory } from "react-router-dom";
+import { Redirect, useHistory } from "react-router-dom";
 
 import { Login as LoginMutation, SignUp } from "../../graphql/mutations";
 import { useAuth } from "../../context/AuthContext";
@@ -14,7 +14,7 @@ function Login() {
   const [email, setEmail] = useState('');
   const [name, setName] = useState('');
   const history = useHistory();
-  const { persistSessionData } = useAuth();
+  const { isAuthenticated, persistSessionData } = useAuth();
 
   const onCompleted = data => {
     const { token, viewer } = Object.entries(data)[0][1];
@@ -25,7 +25,9 @@ function Login() {
   const [login, { error, loading }] = useMutation(LoginMutation, { onCompleted });
   const [signup] = useMutation(SignUp, { onCompleted });
 
-  return (
+  return isAuthenticated() ? (
+    <Redirect to='/home' />
+  ) : (
     <div className="bg-gray-50 flex items-center justify-center min-h-screen">
       <div className="bg-white shadow p-8 max-w-sm w-10/12">
         <h1 className="mb-4 text-2xl">Welcome to Library</h1>
