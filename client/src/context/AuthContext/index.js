@@ -13,6 +13,11 @@ function AuthProvider({ children }) {
   const [error, setError] = useState();
   const client = useApolloClient();
 
+  const clearSessionData = () => {
+    localStorage.removeItem("token_expires_at");
+    setViewer(null);
+  }
+
   // useEffect -> similar to componentDidMount
   useEffect(() => {
     const getViewerIfAuthenticated = async () => {
@@ -53,6 +58,7 @@ function AuthProvider({ children }) {
     <AuthContext.Provider 
       value={{ 
         checkingSession,
+        clearSessionData,
         error,
         isAuthenticated,
         persistSessionData,

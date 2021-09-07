@@ -19,3 +19,9 @@ export const SignUp = gql`
   }
   ${viewerAndToken}
 `;
+
+export const Logout = gql`
+  mutation Logout {
+    logout
+  }
+`;
