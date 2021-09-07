@@ -85,6 +85,9 @@ const resolvers = {
     login(root, args, { dataSources }, info) {
       return dataSources.db.login(args);
     },
+    logout(root, args, context, info) {
+      return true;
+    },
     addBooksToLibrary(root, { input }, { dataSources }, info) {
       return dataSources.db.addBooksToLibrary(input);
     },

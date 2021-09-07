@@ -9,6 +9,8 @@ import Database from "./dataSources/Database.js";
 import resolvers from "./graphql/resolvers.js";
 import typeDefs from "./graphql/typeDefs.js";
 import permissions from "./graphql/permissions.js";
+import cookieHeaderPlugin from "./graphql/plugins/cookieHeaderPlugin.js";
+import { getToken, handleInvalidToken } from "./utils/tokens.js";
 
 const port = process.env.GRAPHQL_API_PORT;
 const app = express();
@@ -25,14 +27,10 @@ app.use(
   expressJwt({
     secret: process.env.JWT_SECRET,
     algorithms: ['HS256'],
-    credentialsRequired: false
+    credentialsRequired: false,
+    getToken
   }),
-  (err, req, res, next) => {
-    if (err.code === 'invalid_token') {
-      return next();
-    }
-    return next(err);
-  }
+  handleInvalidToken
 );
 
 const knexConfig = {
@@ -60,7 +58,8 @@ const server = new ApolloServer({
   context: ({req}) => {
     const user = req.user || null;
     return { user };
-  }
+  },
+  plugins: [cookieHeaderPlugin]
 });
 
 await server.start();

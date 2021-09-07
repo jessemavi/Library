@@ -140,6 +140,7 @@ const typeDefs = gql`
     updateReview(input: UpdateReviewInput!): Review!
     signUp(input: SignUpInput!): AuthPayload!
     login(password: String!, username: String!): AuthPayload!
+    logout: Boolean!
     addBooksToLibrary(input: UpdateLibraryBooksInput!): User!
     removeBooksFromLibrary(input: UpdateLibraryBooksInput!): User!
   }
