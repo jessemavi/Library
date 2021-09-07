@@ -5,7 +5,6 @@ import { ApolloProvider } from '@apollo/client';
 import { Routes } from './router';
 import { AuthProvider } from './context/AuthContext';
 import client from './graphql/apollo';
-
 import './index.css';
 
 function App() {
