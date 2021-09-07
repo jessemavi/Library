@@ -13,3 +13,14 @@ export const GetBooks = gql`
     }
   }
 `;
+
+export const GetViewer = gql`
+  query GetViewer {
+    viewer {
+      id
+      email
+      name
+      username
+    }
+  }
+`;

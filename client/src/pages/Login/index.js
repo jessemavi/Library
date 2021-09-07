@@ -3,6 +3,7 @@ import { useMutation } from "@apollo/client";
 import { useHistory } from "react-router-dom";
 
 import { Login as LoginMutation, SignUp } from "../../graphql/mutations";
+import { useAuth } from "../../context/AuthContext";
 import Button from "../../components/Button";
 import TextInput from "../../components/TextInput";
 
@@ -13,8 +14,13 @@ function Login() {
   const [email, setEmail] = useState('');
   const [name, setName] = useState('');
   const history = useHistory();
+  const { persistSessionData } = useAuth();
 
-  const onCompleted = () => history.push('/home');
+  const onCompleted = data => {
+    const { token, viewer } = Object.entries(data)[0][1];
+    persistSessionData({ token, viewer });
+    history.push('/home');
+  }
 
   const [login, { error, loading }] = useMutation(LoginMutation, { onCompleted });
   const [signup] = useMutation(SignUp, { onCompleted });
