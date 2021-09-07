@@ -33,3 +33,25 @@ export const GetViewerLibrary = gql`
   }
   ${book}
 `;
+
+export const GetBook = gql`
+  query GetBook($id: ID!) {
+    book(id: $id) {
+      ...book
+      reviews {
+        id
+        text
+        reviewedOn
+        rating
+        book {
+          id 
+        }
+        reviewer { 
+          id
+          name 
+        }
+      }
+    }
+  }
+  ${book}
+`;
