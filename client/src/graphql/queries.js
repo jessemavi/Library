@@ -38,6 +38,8 @@ export const GetBook = gql`
   query GetBook($id: ID!) {
     book(id: $id) {
       ...book
+      summary
+      viewerHasInLibrary
       reviews {
         id
         text

@@ -25,3 +25,19 @@ export const Logout = gql`
     logout
   }
 `;
+
+export const AddBooksToLibrary = gql`
+  mutation AddBooksToLibrary($input: UpdateLibraryBooksInput!) {
+    addBooksToLibrary(input: $input) {
+      id
+    }
+  }
+`;
+
+export const RemoveBooksFromLibrary = gql`
+  mutation RemoveBooksFromLibrary($input: UpdateLibraryBooksInput!) {
+    removeBooksFromLibrary(input: $input) {
+      id
+    }
+  }
+`;

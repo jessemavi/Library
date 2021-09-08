@@ -1,21 +1,37 @@
 import { useParams } from "react-router";
-import { useQuery } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
 
 import { GetBook } from "../../graphql/queries";
+import { useAuth } from "../../context/AuthContext";
+import { AddBooksToLibrary, RemoveBooksFromLibrary } from "../../graphql/mutations";
+import { updateViewerHasInLibrary } from "../../utils/updateQueries";
 import Loader from "../../components/Loader";
 import MainLayout from "../../components/MainLayout";
 import PageNotice from "../../components/PageNotice";
 import ReviewsList from "../../components/ReviewList";
+import Button from "../../components/Button";
 
 function Book() {
   const { id } = useParams();
+  const { viewer } = useAuth();
   const { data, error, loading } = useQuery(GetBook, { variables: { id }});
+  const [addBooksToLibrary] = useMutation(AddBooksToLibrary, {
+    update: cache => {
+      updateViewerHasInLibrary(cache, id);
+    }
+  });
+  const [removeBooksFromLibrary] = useMutation(RemoveBooksFromLibrary, {
+    update: cache => {
+      updateViewerHasInLibrary(cache, id);
+    }
+  });
+
   let content = null;
 
   if (loading && !data) {
     content = <Loader centered />
   } else if (data?.book) {
-    const { book: { authors, cover, reviews, summary, title } } = data;
+    const { book: { authors, cover, reviews, summary, title, viewerHasInLibrary } } = data;
 
     content = (
       <div className="bg-white p-8 shadow-xl">
@@ -48,6 +64,23 @@ function Book() {
               <p className="mb-4 italic text-gray-400">
                 Book summary unavailable.
               </p> 
+            )}
+            {viewer && (
+              <Button 
+                className="mt-4"
+                onClick={() => {
+                  const variables = {
+                    input: { bookIds: [id], userId: viewer.id }
+                  };
+
+                  if(viewerHasInLibrary) {
+                    removeBooksFromLibrary({ variables });
+                  } else {
+                    addBooksToLibrary({ variables });
+                  }
+                }}
+                text={viewerHasInLibrary ? 'Remove from Library' : 'Add to Library'}
+              />
             )}
           </div>
         </div>

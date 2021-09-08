@@ -13,6 +13,11 @@ const resolvers = {
     },
     reviews(book, args, { dataSources }, info) {
       return dataSources.db.getBookReviews(book.id);
+    },
+    viewerHasInLibrary(book, args, { dataSources, user }, info) {
+      return user?.sub
+        ? dataSources.db.viewerHasInLibrary(user.sub, book.id)
+        : null;
     }
   },
 

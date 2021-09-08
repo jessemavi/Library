@@ -87,6 +87,8 @@ const typeDefs = gql`
     summary: String
     # title of the book
     title: String!
+    # if the user has this book in their library
+    viewerHasInLibrary: Boolean
   }
 
   # review submitted by a user that includes a rating and possibly text

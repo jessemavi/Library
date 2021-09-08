@@ -274,6 +274,16 @@ class Database extends SQLDataSource {
       .then(rows => rows[0])
       .catch(err => console.error(err));
   }
+
+  async viewerHasInLibrary(id, bookId) {
+    const response = await this.knex
+      .select('*').from('users_books')
+      .where({ user_id: id, book_id: bookId })
+      .then(rows => rows[0])
+      .catch(err => console.error(err));
+
+      return !!response;
+  }
 } 
 
 export default Database;
