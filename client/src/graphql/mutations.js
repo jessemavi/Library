@@ -1,6 +1,6 @@
 import { gql } from '@apollo/client';
 
-import { viewerAndToken } from './fragments';
+import { viewerAndToken, review} from './fragments';
 
 export const Login = gql`
   mutation Login($password: String!, $username: String!) {
@@ -40,4 +40,13 @@ export const RemoveBooksFromLibrary = gql`
       id
     }
   }
+`;
+
+export const CreateReview = gql`
+  mutation CreateReview($input: CreateReviewInput!) {
+    createReview(input: $input) {
+      ...review
+    }
+  }
+  ${review}
 `;

@@ -22,4 +22,20 @@ export const book = gql`
       name
     }
   } 
-`; 
+`;
+
+export const review = gql`
+  fragment review on Review {
+    id
+    rating
+    reviewedOn
+    text
+    book {
+      id
+    }
+    reviewer {
+      id
+      name
+    }
+  }
+`;

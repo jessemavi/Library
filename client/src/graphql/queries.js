@@ -1,6 +1,6 @@
 import { gql } from '@apollo/client';
 
-import { book } from './fragments';
+import { book, review } from './fragments';
 
 export const GetBooks = gql`
   query GetBooks {
@@ -40,20 +40,12 @@ export const GetBook = gql`
       ...book
       summary
       viewerHasInLibrary
+      viewerHasReviewed
       reviews {
-        id
-        text
-        reviewedOn
-        rating
-        book {
-          id 
-        }
-        reviewer { 
-          id
-          name 
-        }
+        ...review
       }
     }
   }
   ${book}
+  ${review}
 `;

@@ -1,4 +1,4 @@
-import { useParams } from "react-router";
+import { useParams, useHistory } from "react-router";
 import { useMutation, useQuery } from "@apollo/client";
 
 import { GetBook } from "../../graphql/queries";
@@ -14,12 +14,24 @@ import Button from "../../components/Button";
 function Book() {
   const { id } = useParams();
   const { viewer } = useAuth();
-  const { data, error, loading } = useQuery(GetBook, { variables: { id }});
+  const history = useHistory();
+
+  /*
+  By default, Apollo Client uses a cache-first fetch policy for all queries to help minimize network requests
+  Setting the fetchPolicy option to cache-and-network for the GetBook query
+  https://www.apollographql.com/docs/react/data/queries/#supported-fetch-policies
+  */
+  const { data, error, loading } = useQuery(GetBook, { 
+    variables: { id },
+    fetchPolicy: 'cache-and-network'
+  });
+
   const [addBooksToLibrary] = useMutation(AddBooksToLibrary, {
     update: cache => {
       updateViewerHasInLibrary(cache, id);
     }
   });
+
   const [removeBooksFromLibrary] = useMutation(RemoveBooksFromLibrary, {
     update: cache => {
       updateViewerHasInLibrary(cache, id);
@@ -31,7 +43,19 @@ function Book() {
   if (loading && !data) {
     content = <Loader centered />
   } else if (data?.book) {
-    const { book: { authors, cover, reviews, summary, title, viewerHasInLibrary } } = data;
+    const { 
+      book: { 
+        authors, 
+        cover, 
+        reviews, 
+        summary, 
+        title, 
+        viewerHasInLibrary, 
+        viewerHasReviewed 
+      } 
+    } = data;
+
+    console.log('reviews: ', reviews)
 
     content = (
       <div className="bg-white p-8 shadow-xl">
@@ -85,14 +109,23 @@ function Book() {
           </div>
         </div>
         <div className="mt-8">
-          <h3 className="mb-4 sm:mb-0">What Readers Say</h3>
-          {reviews.length ? (
-            <div>
-              <ReviewsList reviews={reviews} />
-            </div>
-          ) : (
-            <p className="italic mt-4">No reviews for this book yet!</p>
+        <div className="sm:flex sm:justify-between">
+          <h3 className="mb-4 sm:mb-0">Reviews</h3>
+          {viewer && !viewerHasReviewed && (
+            <Button 
+              onClick={() => history.push(`/book/${id}/review/new`)}
+              primary
+              text='Add a Review'
+            />
           )}
+        </div>
+        {reviews.length ? (
+          <div>
+            <ReviewsList reviews={reviews} />
+          </div>
+        ) : (
+          <p className="italic mt-4">No reviews for this book yet!</p>
+        )}
         </div>
       </div>
     );

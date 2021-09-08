@@ -72,7 +72,7 @@ class Database extends SQLDataSource {
   getBookReviews(bookId) {
     return this.knex
       .select('*').from('reviews')
-      .where({ book_id: bookId }).cache(MINUTE);
+      .where({ book_id: bookId });
   }
 
   async getReviewById(id) {
@@ -282,6 +282,16 @@ class Database extends SQLDataSource {
       .then(rows => rows[0])
       .catch(err => console.error(err));
 
+      return !!response;
+  }
+
+  async viewerHasReviewed(id, bookId) {
+    const response = await this.knex
+      .select('*').from('reviews')
+      .where({ user_id: id, book_id: bookId })
+      .then(rows => rows[0])
+      .catch(err => console.error(err));
+    
       return !!response;
   }
 } 

@@ -18,6 +18,11 @@ const resolvers = {
       return user?.sub
         ? dataSources.db.viewerHasInLibrary(user.sub, book.id)
         : null;
+    },
+    viewerHasReviewed(book, args, { dataSources, user }, info) {
+      return user?.sub
+        ? dataSources.db.viewerHasReviewed(user.sub, book.id)
+        : null;
     }
   },
 
