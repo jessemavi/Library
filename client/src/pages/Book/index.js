@@ -121,7 +121,11 @@ function Book() {
         </div>
         {reviews.length ? (
           <div>
-            <ReviewsList reviews={reviews} />
+            <ReviewsList 
+              reviews={reviews} 
+              bookId={id} 
+              viewerId={viewer?.id || null} 
+            />
           </div>
         ) : (
           <p className="italic mt-4">No reviews for this book yet!</p>

@@ -49,3 +49,13 @@ export const GetBook = gql`
   ${book}
   ${review}
 `;
+
+export const GetReview = gql`
+  query GetReview($id: ID!) {
+    review(id: $id) {
+      id
+      rating
+      text
+    }
+  }
+`;

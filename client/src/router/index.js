@@ -16,6 +16,7 @@ export function Routes() {
       <PublicRoute exact path='/login' component={Login} />
       <PublicRoute exact path='/book/:id' component={Book} />
       <PrivateRoute exact path='/book/:bookId/review/new' component={ReviewBook} />
+      <PrivateRoute exact path='/book/:bookId/review/:reviewId' component={ReviewBook} />
     </Switch>
   );
 }

@@ -50,3 +50,12 @@ export const CreateReview = gql`
   }
   ${review}
 `;
+
+export const UpdateReview = gql`
+  mutation UpdateReview($input: UpdateReviewInput!) {
+    updateReview(input: $input) {
+      ...review
+    }
+  }
+  ${review}
+`;
