@@ -103,6 +103,9 @@ const resolvers = {
     },
     removeBooksFromLibrary(root, { input }, { dataSources }, info) {
       return dataSources.db.removeBooksFromLibrary(input);
+    },
+    createBookAndAuthors(root, { input }, { dataSources }, info) {
+      return dataSources.db.createBookAndAuthors(input);
     }
   }
 };

@@ -294,6 +294,54 @@ class Database extends SQLDataSource {
     
       return !!response;
   }
+
+  async createBookAndAuthors({ authorNames, ...args }) {
+    let authorIds = [];
+
+    if (authorNames?.length) {
+      // get all existing authors from authorNames and add to authorIds
+      const existingAuthors = await this.knex
+        .select('*').from('authors')
+        .whereIn('name', authorNames)
+        .catch(err => console.error(err));
+
+      existingAuthors.forEach(author => {
+        authorIds.push(author.id);
+      })
+
+      // get new authors from filtering out existingAuthors from 
+      const newAuthorNames = authorNames.filter(authorName => {
+        return !existingAuthors.find(existingAuthor => existingAuthor.name === authorName);
+      });
+
+      // create new authors and add ids to authorIds
+      if (newAuthorNames.length) {
+        const newAuthorsToCreate = newAuthorNames.map(name => ({ name }));
+
+        const newAuthors = await this.knex
+          .insert(newAuthorsToCreate, ['*']).into('authors')
+          .catch(err => console.error(err));
+
+        newAuthors.forEach(author => {
+          authorIds.push(author.id);
+        })
+      }
+
+      // create book which will be returned
+      const book = await this.knex
+        .insert({ ...args }, ['*']).into('books')
+        .then(rows => rows[0])
+        .catch(err => console.error(err));
+
+      // add to authors_books join table
+      const authorsBooks = authorIds.map(authorId => ({ author_id: authorId, book_id: book.id }));
+      await this.knex
+        .insert(authorsBooks).into('authors_books')
+        .catch(err => console.error(err));
+
+      return book;
+    }
+  }
 } 
 
 export default Database;

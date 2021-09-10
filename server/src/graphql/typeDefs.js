@@ -55,6 +55,15 @@ const typeDefs = gql`
     username: String!
   }
 
+  input CreateBookAndAuthorsInput {
+    # names of authors, authors that don't already exist will be created
+    authorNames: [String]
+    cover: String
+    genre: Genre
+    summary: String
+    title: String!
+  }
+
   # authenticated user and their valid JWT
   type AuthPayload {
     viewer: User
@@ -147,6 +156,7 @@ const typeDefs = gql`
     logout: Boolean!
     addBooksToLibrary(input: UpdateLibraryBooksInput!): User!
     removeBooksFromLibrary(input: UpdateLibraryBooksInput!): User!
+    createBookAndAuthors(input: CreateBookAndAuthorsInput!): Book!
   }
 `;
 

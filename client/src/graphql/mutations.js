@@ -59,3 +59,23 @@ export const UpdateReview = gql`
   }
   ${review}
 `;
+
+export const DeleteReview = gql`
+  mutation DeleteReview($id: ID!) {
+    deleteReview(id: $id)
+  }
+`;
+
+export const CreateBookAndAuthors = gql`
+  mutation CreateBookAndAuthors($input: CreateBookAndAuthorsInput!) {
+    createBookAndAuthors(input: $input) {
+      id
+      title
+      cover
+      genre
+      authors {
+        name
+      }
+    }
+  }
+`;

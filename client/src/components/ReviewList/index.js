@@ -1,11 +1,22 @@
 import { useHistory } from "react-router";
+import { useMutation } from "@apollo/client";
 import dayjs from "dayjs";
 
+import { DeleteReview } from "../../graphql/mutations";
 import Button from "../Button";
 
 function ReviewsList({ reviews, bookId, viewerId }) {
-  console.log('reviews: ', reviews)
   const history = useHistory();
+
+  /*
+  - remove the review from the cache by its id returned from the mutation
+  https://www.apollographql.com/docs/react/data/mutations/#the-update-function
+  */
+  const [deleteReview] = useMutation(DeleteReview, {
+    update: (cache, { data: { deleteReview } }) => {
+      cache.evict({ id: `Review:${deleteReview}`});
+    }
+  });
 
   return reviews.map(({ id, rating, reviewedOn, reviewer, text }) => (
     <div className="pt-10" key={id}>
@@ -24,9 +35,18 @@ function ReviewsList({ reviews, bookId, viewerId }) {
         {viewerId === reviewer.id && (
           <div>
             <Button
+              className="block"
               onClick={() => history.push(`/book/${bookId}/review/${id}`)}
               text='Update'
             />
+            <button
+              className="block m-auto mt-1 text-sm text-gray-600 hover:text-red-600"
+              onClick={() => {
+                deleteReview({ variables: { id } }).catch(err => console.error(err))
+              }}
+            >
+              Delete
+            </button>
           </div>
         )}
       </div>

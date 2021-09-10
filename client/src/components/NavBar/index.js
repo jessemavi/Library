@@ -28,11 +28,18 @@ function NavBar() {
         </Link>
         <div className="flex items-center sm:justify-end mt-2 sm:mt-0">
         {isAuthenticated() && (
-          <Link to="/home">
-            <span className="font-semibold mr-4 text-sm sm:text-base text-red-600">
-              My Library
-            </span>
-          </Link>
+          <>
+            <Link to="/home">
+              <span className="font-semibold mr-4 text-sm sm:text-base text-red-600">
+                My Library
+              </span>
+            </Link>
+            <Link to="/book/new">
+              <span className="font-semibold mr-4 text-sm sm:text-base text-red-600">
+                Add Book
+              </span>
+            </Link>
+          </>
         )}
           <Button
             onClick={event => {

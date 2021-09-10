@@ -55,8 +55,6 @@ function Book() {
       } 
     } = data;
 
-    console.log('reviews: ', reviews)
-
     content = (
       <div className="bg-white p-8 shadow-xl">
         <div className="flex flex-col sm:flex-row items-center
