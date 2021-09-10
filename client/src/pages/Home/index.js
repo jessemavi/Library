@@ -7,8 +7,9 @@ import PageNotice from "../../components/PageNotice";
 import MainLayout from "../../components/MainLayout";
 
 function Home() {
-  const { data, error, loading } = useQuery(GetViewerLibrary);
-  console.log('data: ', data)
+  const { data, error, loading } = useQuery(GetViewerLibrary, {
+    fetchPolicy: 'cache-and-network'
+  });
 
   let content = null;
 
