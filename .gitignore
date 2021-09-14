@@ -4,8 +4,5 @@ node_modules
 # environment
 .env
 
-# mock test data
-server/db.js
-
 # db
 server/src/dataSources/tables.sql
