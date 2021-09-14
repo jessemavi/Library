@@ -1,6 +1,6 @@
 # Library
 
-Library
+Library allows users to discover new books from other readers, add their own books, review books and create their own personal libraries.
 
 ## Built with:
 * Node.js
@@ -11,5 +11,3 @@ Library
 * React
 * Apollo Client
 * Tailwind CSS
-
-### Instructions
