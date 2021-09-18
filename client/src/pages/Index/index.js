@@ -7,7 +7,9 @@ import MainLayout from "../../components/MainLayout";
 import PageNotice from '../../components/PageNotice';
 
 function Index() {
-  const { data, error, loading } = useQuery(GetBooks);
+  const { data, error, loading } = useQuery(GetBooks, {
+    fetchPolicy: 'cache-and-network'
+  });
   let content = null;
 
   if (loading && !data) {

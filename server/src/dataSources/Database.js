@@ -25,44 +25,40 @@ class Database extends SQLDataSource {
     }
   }
 
-  async getAuthorById(id) {
+  getAuthorById(id) {
     return this.knex
       .select('*').from('authors').where({ id })
         .then(rows => rows[0])
         .catch(err => console.error(err));
   }
 
-  async getAuthorBooks(authorId) {
-    const books = await this.knex
+  getAuthorBooks(authorId) {
+    return this.knex
       .select('*').from('authors_books')
       .join('books', 'authors_books.book_id', '=', 'books.id')
       .where({ author_id: authorId })
       .then(rows => rows)
       .catch(err => console.error(err));
-
-    return books;
   }
 
   getAuthors() {
     return this.knex.select('*').from('authors');
   }
 
-  async getBookById(id) {
+  getBookById(id) {
     return this.knex
       .select('*').from('books').where({ id })
-        .then(rows => rows[0])
-        .catch(err => console.error(err));
+      .then(rows => rows[0])
+      .catch(err => console.error(err));
   }
 
-  async getBookAuthors(bookId) {
-    const authors = await this.knex
+  getBookAuthors(bookId) {
+    return this.knex
       .select('*').from('authors_books')
       .join('authors', 'authors_books.author_id', '=', 'authors.id')
       .where({ book_id: bookId })
       .then(rows => rows)
       .catch(err => console.error(err));
-
-      return authors;
   }
 
   getBooks() {
@@ -75,25 +71,28 @@ class Database extends SQLDataSource {
       .where({ book_id: bookId });
   }
 
-  async getReviewById(id) {
+  getReviewById(id) {
     return this.knex.select('*').from('reviews').where({ id })
       .then(rows => rows[0])
       .catch(err => console.error(err));
   }
 
-  async getUser(username) {
-    return this.knex.select('*').from('users').where({ username })
+  getUser(username) {
+    return this.knex
+      .select('*').from('users')
+      .where({ username })
       .then(rows => rows[0])
       .catch(err => console.error(err));
   } 
 
-  async getUserById(id) {
-    return this.knex.select('*').from('users').where({ id })
+  getUserById(id) {
+    return this.knex.select('*').from('users')
+      .where({ id })
       .then(rows => rows[0])
       .catch(err => console.error(err));
   }
 
-  async getUserLibrary(userId) {
+  getUserLibrary(userId) {
     return this.knex
       .select('*').from('users_books')
       .join('books', 'users_books.book_id', '=', 'books.id')
@@ -103,10 +102,11 @@ class Database extends SQLDataSource {
   }
 
   getUserReviews(userId) {
-    return this.knex.select('*').from('reviews').where({ user_id: userId });
+    return this.knex.select('*').from('reviews')
+      .where({ user_id: userId });
   }
 
-  async createAuthor(name) {
+  createAuthor(name) {
     return this.knex
       .insert({ name }, ['*']).into('authors')
       .then(rows => rows[0])
@@ -169,10 +169,10 @@ class Database extends SQLDataSource {
 
   async updateReview({ id, rating, text }) {
     return this.knex
-    .update({ rating, ...(text && { text })}, ['*'])
-    .from('reviews').where({ id })
-    .then(rows => rows[0])
-    .catch(err => console.error(err));
+      .update({ rating, ...(text && { text })}, ['*'])
+      .from('reviews').where({ id })
+      .then(rows => rows[0])
+      .catch(err => console.error(err));
   }
 
   async signUp({ email, name, password, username }) {
@@ -278,7 +278,7 @@ class Database extends SQLDataSource {
       .then(rows => rows[0])
       .catch(err => console.error(err));
 
-      return !!response;
+    return !!response;
   }
 
   async viewerHasReviewed(id, bookId) {
@@ -288,7 +288,7 @@ class Database extends SQLDataSource {
       .then(rows => rows[0])
       .catch(err => console.error(err));
     
-      return !!response;
+    return !!response;
   }
 
   async createBookAndAuthors({ authorNames, ...args }) {

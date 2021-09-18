@@ -23,6 +23,7 @@ function Login() {
   }
 
   const [login, { error, loading }] = useMutation(LoginMutation, { onCompleted });
+  // todo: handle signup error
   const [signup] = useMutation(SignUp, { onCompleted });
 
   return isAuthenticated() ? (
